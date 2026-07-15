@@ -20,11 +20,11 @@ MOEA/D-RV is a state-of-the-art **dynamic multi-objective evolutionary algorithm
 |-----|-------------|---------|
 | **Set 1** | 6 MOEA/D Variants (Standard Benchmark) | Compare against state-of-the-art |
 | **Set 2** | 3 Environment Configurations | Test robustness across dynamics |
-| **Set 4** | 6 Ablation Variants | Isolate component contributions |
+| **Set 3** | 6 Ablation Variants | Isolate component contributions |
 
 ---
 
-## 🎯 Set 4: Ablation Study
+## 🎯 Set 3: Ablation Study
 
 ### Purpose
 Isolate and quantify the contribution of each core component of MOEA/D-RV.
@@ -54,7 +54,7 @@ Isolate and quantify the contribution of each core component of MOEA/D-RV.
 
 ---
 
-## 📊 Ablation Study Results
+## 📊 Set 3: Ablation Study Results
 
 ### MIGD Summary Table (lower is better)
 
@@ -236,8 +236,8 @@ python main_set1.py
 # Set 2: Multiple environment configurations
 python main_set2.py
 
-# Set 4: Ablation study
-python main_set4.py
+# Set 3: Ablation study
+python main_set3.py
 
 # Run specific configuration
 python main_set2.py --config standard
@@ -302,7 +302,7 @@ MOEA-D-RV/
 │   └── test_algorithm.py         # Unit tests
 ├── main_set1.py                  # Set 1: Standard benchmark
 ├── main_set2.py                  # Set 2: Environment configs
-├── main_set4.py                  # Set 4: Ablation study
+├── main_set3.py                  # Set 3: Ablation study
 ├── requirements.txt
 ├── LICENSE
 └── README.md
@@ -405,7 +405,7 @@ This research was supported by:
 
 ## 📧 Contact
 
-- **Yves Ndikuriyo** — [GitHub](https://github.com/YvesNDIKURIYO-2022)
+- **Yves Ndikuriyo** — yvesndikuriyo@csu.edu.cn, [GitHub](https://github.com/YvesNDIKURIYO-2022)
 - **Prof. Yinggui Zhang** — ygzhang@csu.edu.cn
 
 ---
