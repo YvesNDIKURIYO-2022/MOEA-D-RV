@@ -299,5 +299,3 @@ For questions about the code or the manuscript, please contact:
 - **Yinggui Zhang** — ygzhang@csu.edu.cn
 
 Central South University, School of Traffic and Transportation Engineering, Changsha 410075, Hunan, China.
-
-All numeric claims are unchanged from the previous README and remain consistent with the manuscript: 1.86 / 1.93 / 1.79 Friedman ranks, 10/14 and 11/14 win counts, 14.3% ablation improvement, −288.5% w/o HV, 390,075 vs 38,879 evaluations, 5.60 h vs 0.97 h wall-clock, χ² = 41.62, p = 7.02 × 10⁻⁸.
