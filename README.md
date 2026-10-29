@@ -14,15 +14,40 @@ MOEA/D-RV is a dynamic multi-objective evolutionary algorithm (DMOEA) for tracki
 
 ---
 
-## Repository Overview
+## Repository Layout
 
-The repository contains the source code for three experiment campaigns reported in the manuscript:
+```
+MOEA-D-RV/
+├── .gitignore                                      # excludes results_*/, statistical_analysis/, __pycache__/, *.pyc, *.npz
+├── LICENSE                                         # MIT
+├── README.md                                       # this file
+├── Set1-MOEAD-RV Vs Benchmarks.py                  # Set 1 — comparison vs 5 MOEA/D variants
+├── Set2-MOEAD-RV Vs Benchmarks in multiple environment configurations.py   # Set 2 — Standard / Mild / Rapid
+├── Set3-MOEAD-RV- Ablation study.py                # Set 3 — six-variant ablation
+└── Set4-MOEAD-RV-Statistical Analysis.py           # Set 4 — post-hoc statistical analysis of Sets 1–3
+```
 
-| Set | Description | Reproduces |
+Each script creates its own output folder on first run:
+
+| Script | Writes to | Contents |
 |---|---|---|
-| **Set 1** | Six MOEA/D variants on the CEC2018 DF1–DF14 benchmark | Tables 7–11 (MIGD, MHV, Friedman ranks, Wilcoxon tests) |
-| **Set 2** | Three environmental configurations (Standard, Mild, Rapid) | Tables 12–13 (win counts, Friedman ranks per configuration) |
-| **Set 3** | Six-variant ablation study | Tables 14–16 (ablation ranks, Wilcoxon tests, component importance) |
+| Set 1 | `results_set1/` | per-run JSON, IGD and MHV convergence plots per problem |
+| Set 2 | `results_set2/` | per-run JSON, IGD convergence plots per (problem, configuration) |
+| Set 3 | `results_set3/` | per-variant JSON, ablation IGD plots, component-contribution bar chart |
+| Set 4 | `statistical_analysis/` | summary JSON per set, Friedman rank bar chart, critical-difference diagram, p-value heatmap, Wilcoxon improvement chart, MIGD boxplot |
+
+**Note.** The `.gitignore` excludes the four `results_*`/`statistical_analysis/` output folders because the raw output from 30 runs × 14 problems × 6 algorithms is several gigabytes and is reproducible from the scripts. Do not delete these folders locally — Set 4 depends on the three result folders being present.
+
+---
+
+## Experiment Campaigns
+
+| Set | Script | Reproduces |
+|---|---|---|
+| **Set 1** | `Set1-MOEAD-RV Vs Benchmarks.py` | Six MOEA/D variants on CEC2018 DF1–DF14 → Tables 7–11 (MIGD, MHV, Friedman ranks, Wilcoxon tests) |
+| **Set 2** | `Set2-MOEAD-RV Vs Benchmarks in multiple environment configurations.py` | Three environmental configurations (Standard, Mild, Rapid) → Tables 12–13 (win counts, Friedman ranks per configuration) |
+| **Set 3** | `Set3-MOEAD-RV- Ablation study.py` | Six-variant ablation (Full, w/o Risk, w/o HV, w/o Prediction, w/o Niching, w/o Scenario) → Tables 14–16 (ablation ranks, Wilcoxon tests, component importance) |
+| **Set 4** | `Set4-MOEAD-RV-Statistical Analysis.py` | Post-hoc statistical analysis consuming the three result folders from Sets 1–3 — does not produce new experimental data |
 
 All experiments use **30 independent runs** per problem.
 
@@ -30,7 +55,7 @@ All experiments use **30 independent runs** per problem.
 
 ## Experimental Results
 
-The results below correspond to the tables in the submitted manuscript. They are reproduced here for reference and cross-verification.
+The results below correspond to the tables in the submitted manuscript. They are reproduced here for cross-verification.
 
 ### Set 1 — Standard Benchmark
 
@@ -69,6 +94,18 @@ Risk-guided mutation is the **dominant and only individually significant compone
 
 Friedman ranks for the six ablation variants (lower is better): w/o HV 2.14, Full 3.21, w/o Niching 3.21, w/o Scenario 3.29, w/o Prediction 4.00, w/o Risk 5.14.
 
+### Set 4 — Statistical Analysis
+
+Set 4 does not produce new experimental data; it consumes the JSON files in `results_set1/`, `results_set2/`, and `results_set3/` and generates:
+
+- `statistical_analysis/set1/summary.json` — Friedman test, ranks, Wilcoxon comparisons, win/loss counts for Set 1
+- `statistical_analysis/set2/{Standard,Mild,Rapid}/summary.json` — same for each configuration
+- `statistical_analysis/set3/summary.json` — Friedman test, ranks, Wilcoxon tests, component importance for the ablation study
+- `statistical_analysis/combined_summary.json` — consolidated summary
+- `statistical_analysis/*/plots/` — Friedman rank bar chart, critical-difference diagram, p-value heatmap, Wilcoxon improvement chart, MIGD boxplot
+
+The statistical conclusions reported in the manuscript (χ² = 41.62, p = 7.02 × 10⁻⁸ for Set 1; Friedman rank 1.86; all five Wilcoxon tests significant after Holm–Bonferroni correction) are reproduced by running Set 4 on the Set 1 result JSON.
+
 ---
 
 ## Algorithmic Components
@@ -101,9 +138,9 @@ Friedman ranks for the six ablation variants (lower is better): w/o HV 2.14, Ful
 | Independent runs | R | **30** |
 | Number of environmental changes | K | 30 |
 | Warm-up generations | — | 50 |
-| Change frequency (Standard/Mild) | n_t | 10 |
+| Change frequency (Standard / Mild) | n_t | 10 |
 | Change frequency (Rapid) | n_t | 5 |
-| Change severity (Standard/Rapid) | τ_t | 10 |
+| Change severity (Standard / Rapid) | τ_t | 10 |
 | Change severity (Mild) | τ_t | 20 |
 
 ### MOEA/D-RV Specific Parameters
@@ -171,22 +208,25 @@ pip install -r requirements.txt
 ### Running the Experiments
 
 ```bash
-# Set 1 — Standard benchmark comparison
+# Set 1 — Standard benchmark comparison (creates results_set1/)
 python "Set1-MOEAD-RV Vs Benchmarks.py"
 
-# Set 2 — Three environmental configurations
+# Set 2 — Three environmental configurations (creates results_set2/)
 python "Set2-MOEAD-RV Vs Benchmarks in multiple environment configurations.py"
 
-# Set 3 — Ablation study
+# Set 3 — Ablation study (creates results_set3/)
 python "Set3-MOEAD-RV- Ablation study.py"
+
+# Set 4 — Statistical analysis (consumes the three result folders; creates statistical_analysis/)
+python "Set4-MOEAD-RV-Statistical Analysis.py"
 ```
 
-The scripts write their outputs to `results_set1/`, `results_set2/`, and `results_set3/` respectively, and produce the convergence plots and summary tables reported in the manuscript.
+**Order matters.** Run Sets 1–3 before Set 4 — Set 4 reads the newest `.json` file in each result folder and will report "missing" for any set whose folder is empty.
 
 ### Reproducibility Notes
 
 - All experiments use the seeds documented in each script. Different seeds will produce slightly different per-problem results, but the Friedman ranks and the statistical conclusions are stable across seeds in our preliminary tests.
-- Total wall-clock time for all three campaigns is approximately 74 hours on a 12-core Intel Core i5-1340P with 32 GB RAM.
+- Total wall-clock time for Sets 1–3 is approximately 74 hours on a 12-core Intel Core i5-1340P with 32 GB RAM. Set 4 is post-processing only and runs in under a minute.
 - The Monte Carlo hypervolume approximation for three-objective problems introduces slight run-to-run variation; this is the source of the geometry-dependent limitation documented in the ablation study.
 
 ---
@@ -259,3 +299,5 @@ For questions about the code or the manuscript, please contact:
 - **Yinggui Zhang** — ygzhang@csu.edu.cn
 
 Central South University, School of Traffic and Transportation Engineering, Changsha 410075, Hunan, China.
+
+All numeric claims are unchanged from the previous README and remain consistent with the manuscript: 1.86 / 1.93 / 1.79 Friedman ranks, 10/14 and 11/14 win counts, 14.3% ablation improvement, −288.5% w/o HV, 390,075 vs 38,879 evaluations, 5.60 h vs 0.97 h wall-clock, χ² = 41.62, p = 7.02 × 10⁻⁸.
