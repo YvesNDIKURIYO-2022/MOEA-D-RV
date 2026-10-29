@@ -1,5 +1,5 @@
 """
-MOEA/D-RV — Set 5: Statistical Analysis
+MOEA/D-RV — Set 4: Statistical Analysis
 
 Following AB-DMOEA (Peng et al., 2024) and ECICPS (Wang et al., 2025).
 
